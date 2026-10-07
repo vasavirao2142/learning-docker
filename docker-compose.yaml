@@ -1,0 +1,29 @@
+services:
+  backend:
+    build: .
+    container_name: backend_app
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      CONNECTION_STRING: mongodb://mongo_container:27017
+    depends_on:
+      - mongodb
+    develop:
+      watch:
+        - action: sync
+          path: ./routes
+          target: /app/routes
+        - action: rebuild
+          path: ./package.json
+
+  mongodb:
+    image: mongo
+    container_name: mongo_container
+    ports:
+      - "27017:27017"
+    volumes:
+      - vasu-volume:/data/db
+
+volumes:
+  vasu-volume:
